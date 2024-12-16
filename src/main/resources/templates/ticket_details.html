@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<div th:replace="~{fragments/fragments :: head}"></div>
+
+	<!-- Dettaglio ticket -->
+	<title>Ticket Details</title>
+</head>
+
+<body>
+	<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+	<div class="container py-3">
+		<h1>Ticket Details</h1>
+		<p><strong>Description:</strong> <span th:text="${ticket.description}"></span></p>
+		<p><strong>Status:</strong> <span th:text="${ticket.status.formattedName}"></span></p>
+		<p><strong>Operator:</strong> <span th:text="${ticket.operator.name}"></span></p>
+		<a href="/tickets" class="btn btn-secondary">Back to Tickets</a>
+	</div>
+
+	<div th:replace="~{fragments/fragments :: script}"></div>
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<div th:replace="~{fragments/fragments :: head}"></div>
+
+	<title>Operators</title>
+</head>
+
+<body>
+	<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+	<div class="container py-3">
+		<h1>Operators</h1>
+
+		<!-- Lista degli operatori -->
+		<div th:if="${error}" class="alert alert-danger">
+			<p th:text="${error}"></p>
+		</div>
+
+		<table class="content table table-striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>N° Tickets Assigned</th>
+					<th>Availability</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="operator : ${operators}">
+					<td th:text="${operator.name}"></td>
+					<td th:text="${operatorTicketCounts[operator.id]}"></td>
+					<td>
+						<span th:text="${operator.available ? 'Available' : 'Not Available'}"></span>
+					</td>
+					<td>
+
+						<div class="d-flex gap-2">
+						<!-- Aggiornamento della disponibilità -->
+						<form th:action="@{/operators/{id}/update-availability(id=${operator.id})}" method="post">
+							<input type="hidden" name="available" th:value="${!operator.available}" />
+							<button type="submit" class="btn"
+								th:classappend="${operator.available ? 'btn-danger' : 'btn-success'}">
+								<span th:text="${operator.available ? 'Set Unavailable' : 'Set Available'}"></span>
+							</button>
+						</form>
+						
+						<a th:href="@{/operators(id=${operator.id})}" class="btn btn-info btn-sm">View Details</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<!-- Dettagli dell'operatore selezionato -->
+		<div th:if="${selectedOperator != null}">
+			<h2>Operator Details</h2>
+			<p><strong>Name:</strong> <span th:text="${selectedOperator.name}"></span></p>
+
+			<h3>Assigned Tickets</h3>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Title</th>
+						<th>Status</th>
+						<th>Category</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="ticket : ${tickets}">
+						<td th:text="${ticket.title}"></td>
+						<td th:text="${ticket.status.formattedName}"></td>
+						<td th:text="${ticket.category.name}"></td>
+						<td>
+							<a th:href="@{/tickets/edit/{id}(id=${ticket.id})}" sec:authorize="hasAuthority('USER')"
+								class="btn btn-primary btn-sm">Edit</a>
+							<a th:href="@{/notes/{id}(id=${ticket.id})}" class="btn btn-info btn-sm">Notes</a>
+							<a th:href="@{/tickets/show/{id}(id=${ticket.id})}" class="btn btn-info btn-sm">View</a>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div th:replace="~{fragments/fragments :: script}"></div>
+</body>
+
+</html>

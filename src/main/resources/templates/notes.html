@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<div th:replace="~{fragments/fragments :: head}"></div>
+
+	<title>Notes for Ticket</title>
+</head>
+
+<body>
+	<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+	<div class="container py-3">
+		<!-- Dettagli del ticket -->
+		<h1>Notes for Ticket: <span th:text="${ticket.title}"></span></h1>
+		<p><strong>Description:</strong> <span th:text="${ticket.description}"></span></p>
+
+		<!-- Elenco delle note -->
+		<h2>Notes</h2>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Author</th>
+					<th>Created At</th>
+					<th>Content</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="note : ${notes}">
+					<td th:text="${note.author}"></td>
+					<td th:text="${#temporals.format(note.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+					<td th:text="${note.content}"></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<!-- Form per aggiungere una nuova nota -->
+		<h2>Add a New Note</h2>
+		<form th:action="@{/notes/{id}(id=${ticket.id})}" method="post">
+			<div class="mb-3">
+				<label for="author" class="form-label">Author</label>
+				<input type="text" class="form-control" id="author" name="author" required>
+			</div>
+			<div class="mb-3">
+				<label for="content" class="form-label">Content</label>
+				<textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+			</div>
+			<button type="submit" class="btn btn-primary">Save</button>
+			<a href="/tickets" class="btn btn-secondary">Back to Tickets</a>
+		</form>
+	</div>
+
+	<div th:replace="~{fragments/fragments :: script}"></div>
+</body>
+
+</html>

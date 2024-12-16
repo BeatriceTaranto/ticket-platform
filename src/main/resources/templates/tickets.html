@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<div th:replace="~{fragments/fragments :: head}"></div>
+
+	<!-- Tabella tickets -->
+	<title>Tickets</title>
+</head>
+
+<body>
+	<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+	<div class="container py-3">
+		<div class="row">
+			<div class="col-md-2" sec:authorize="hasAuthority('ADMIN')">
+				<h1>Tickets</h1>
+				<a href="/tickets/create" class="btn btn-primary">Create New Ticket</a>
+			</div>
+			<div class="col-md-10 py-2" sec:authorize="hasAuthority('ADMIN')">
+				<form method="get" th:action="@{/tickets}">
+					<div class="input-group">
+						<input th:value="${keyword}" type="search" name="keyword" placeholder="Search tickets..."
+							class="form-control">
+						<button class="btn btn-primary" type="submit">
+							<i class="fas fa-search"></i>
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<br>
+		<div class="row">
+			<div class="col">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Title</th>
+							<th>Status</th>
+							<th>Operator</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="ticket : ${tickets}">
+							<td th:text="${ticket.title}"></td>
+							<td th:text="${ticket.status.formattedName}"></td>
+							<td th:text="${ticket.operator.name}"></td>
+							<td>
+								<div class="d-flex gap-2">
+									<a th:href="@{/tickets/edit/{id}(id=${ticket.id})}"
+										sec:authorize="hasAuthority('ADMIN')" class="btn btn-primary btn-sm">Edit</a>
+									<a th:href="@{/notes/{id}(id=${ticket.id})}" class="btn btn-info btn-sm">Notes</a>
+									<a th:href="@{/tickets/show/{id}(id=${ticket.id})}"
+										class="btn btn-info btn-sm">View</a>
+									<form th:action="@{/tickets/delete/{id}(id=${ticket.id})}"
+										sec:authorize="hasAuthority('ADMIN')" method="post">
+										<button class="btn btn-danger btn-sm" type="submit"
+											onclick="return confirm('Are you sure you want to delete this ticket?')">Delete</button>
+									</form>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div th:if="${tickets.isEmpty()}" class="alert alert-warning">
+					<span>There are no tickets in the database</span>
+				</div>
+			</div>
+
+			<div th:replace="~{fragments/fragments :: script}"></div>
+</body>
+
+</html>
