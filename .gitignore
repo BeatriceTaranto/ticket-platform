@@ -34,3 +34,5 @@ build/
 templates/application-local.properties 
 templates/application-local.properties 
 templates/application-local.properties 
+templates/application-local.properties 
+src/main/resources/application-local.properties 
